@@ -14,6 +14,134 @@ export type SplytoVotingDapp = {
   },
   "instructions": [
     {
+      "name": "nitSplVote",
+      "discriminator": [
+        120,
+        73,
+        111,
+        217,
+        187,
+        62,
+        195,
+        242
+      ],
+      "accounts": [
+        {
+          "name": "voter",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "splVoteAccount",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "mint"
+        },
+        {
+          "name": "voterAta",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "voter"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "tokenName",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "close",
       "discriminator": [
         98,
@@ -31,26 +159,6 @@ export type SplytoVotingDapp = {
           "writable": true,
           "signer": true
         },
-        {
-          "name": "splytoVotingDapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "decrement",
-      "discriminator": [
-        106,
-        227,
-        168,
-        59,
-        248,
-        27,
-        150,
-        101
-      ],
-      "accounts": [
         {
           "name": "splytoVotingDapp",
           "writable": true
@@ -77,61 +185,6 @@ export type SplytoVotingDapp = {
         }
       ],
       "args": []
-    },
-    {
-      "name": "initialize",
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "splytoVotingDapp",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "set",
-      "discriminator": [
-        198,
-        51,
-        53,
-        241,
-        116,
-        29,
-        126,
-        194
-      ],
-      "accounts": [
-        {
-          "name": "splytoVotingDapp",
-          "writable": true
-        }
-      ],
-      "args": [
-        {
-          "name": "value",
-          "type": "u8"
-        }
-      ]
     }
   ],
   "accounts": [
@@ -149,12 +202,23 @@ export type SplytoVotingDapp = {
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "noTokenFound",
+      "msg": "User must own the token he vote fore"
+    }
+  ],
   "types": [
     {
       "name": "splytoVotingDapp",
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "tokenName",
+            "type": "string"
+          },
           {
             "name": "count",
             "type": "u8"

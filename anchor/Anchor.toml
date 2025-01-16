@@ -3,16 +3,20 @@ anchor_version = "0.30.1"
 
 [features]
 resolution = true
-skip-lint = false
+skip-lint = true
 
 [programs.localnet]
 splyto_voting_dapp = "6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E"
+
+[programs.devnet]
+splyto_voting_dapp = "6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E"
+
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "Devnet"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
