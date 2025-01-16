@@ -5,9 +5,9 @@
  * IDL can be found at `target/idl/splyto_voting_dapp.json`.
  */
 export type SplytoVotingDapp = {
-  "address": "coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF",
+  "address": "6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E",
   "metadata": {
-    "name": "splyto_voting_dapp",
+    "name": "splytoVotingDapp",
     "version": "0.1.0",
     "spec": "0.1.0",
     "description": "Created with Anchor"
@@ -32,7 +32,7 @@ export type SplytoVotingDapp = {
           "signer": true
         },
         {
-          "name": "splyto_voting_dapp",
+          "name": "splytoVotingDapp",
           "writable": true
         }
       ],
@@ -52,7 +52,7 @@ export type SplytoVotingDapp = {
       ],
       "accounts": [
         {
-          "name": "splyto_voting_dapp",
+          "name": "splytoVotingDapp",
           "writable": true
         }
       ],
@@ -72,7 +72,7 @@ export type SplytoVotingDapp = {
       ],
       "accounts": [
         {
-          "name": "splyto_voting_dapp",
+          "name": "splytoVotingDapp",
           "writable": true
         }
       ],
@@ -97,7 +97,7 @@ export type SplytoVotingDapp = {
           "signer": true
         },
         {
-          "name": "splyto_voting_dapp",
+          "name": "splytoVotingDapp",
           "writable": true,
           "signer": true
         },
@@ -122,7 +122,7 @@ export type SplytoVotingDapp = {
       ],
       "accounts": [
         {
-          "name": "splyto_voting_dapp",
+          "name": "splytoVotingDapp",
           "writable": true
         }
       ],
@@ -136,22 +136,22 @@ export type SplytoVotingDapp = {
   ],
   "accounts": [
     {
-      "name": "splyto_voting_dapp",
+      "name": "splytoVotingDapp",
       "discriminator": [
-        255,
-        176,
-        4,
-        245,
-        188,
-        253,
-        124,
-        25
+        90,
+        34,
+        58,
+        57,
+        169,
+        31,
+        88,
+        124
       ]
     }
   ],
   "types": [
     {
-      "name": "splyto_voting_dapp",
+      "name": "splytoVotingDapp",
       "type": {
         "kind": "struct",
         "fields": [
