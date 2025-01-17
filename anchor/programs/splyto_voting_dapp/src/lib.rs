@@ -17,8 +17,8 @@ declare_id!("6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E");
 pub mod splyto_voting_dapp {
     use super::*;
 
-  pub fn mint_account_and_tokens(ctx:Context<MintAccountAndTokens>, decimals: u8, amount: u64) ->Result<()>{
-    let res = _mint_account_and_tokens(ctx, decimals, amount);
+  pub fn create_mint(ctx:Context<CreateTokenMint>, decimals: u8, mint_address: Pubkey) ->Result<()>{
+    let res = _create_mint(ctx, decimals);
     res
   }
 

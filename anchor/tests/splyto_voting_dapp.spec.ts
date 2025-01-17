@@ -61,17 +61,13 @@ splytoVotingDapp = new Program<SplytoVotingDapp>(
     // for(let i =0;i <5;i++){
 
         try{
-        let new_mint = Keypair.generate().publicKey;
-        const sig = await splytoVotingDapp.methods.mintAccountAndTokens(
-          3,
-          new anchor.BN(10000000000)
-        ).accounts({
-          mintAuthority: MOD.publicKey,
-          newMintAdderss: new_mint
-        }).signers([MOD]).rpc();
-        new_mints.push(new_mint)
+        let new_mint = Keypair.generate();
+    const sig = await splytoVotingDapp.methods.createMint(2).accounts({
+    mintAuthority: MOD.publicKey,
+    payer: MOD.publicKey   
+  }).signers([MOD]).rpc();
 
-        console.log("new mint: ", new_mint)
+        
     }
     catch(err){
       console.log("Error: ",err)

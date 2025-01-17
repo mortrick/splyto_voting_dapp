@@ -1,0 +1,16 @@
+   // Mint tokens to the associated token account of the moderator
+    // let cpi_accounts = MintTo {
+    //     mint: mint.to_account_info(),
+    //     to: moderator_ata.to_account_info(),
+    //     authority: moderator.to_account_info(),
+    // };
+    // let cpi_context = CpiContext::new(ctx.accounts.token_program.to_account_info(), cpi_accounts);
+
+    // // Call the SPL Token program's mint_to function
+    // token::mint_to(cpi_context, amount)?;
+
+    // msg!(
+    //     "Successfully minted {} tokens to the moderator's ATA: {}",
+    //     amount,
+    //     moderator_ata.key()
+    // );
