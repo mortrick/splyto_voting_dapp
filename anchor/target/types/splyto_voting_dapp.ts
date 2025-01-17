@@ -39,36 +39,182 @@ export type SplytoVotingDapp = {
       "args": []
     },
     {
-      "name": "increment",
+      "name": "mintAccountAndTokens",
       "discriminator": [
-        11,
+        90,
+        215,
+        254,
         18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
+        132,
+        187,
+        92,
+        23
       ],
       "accounts": [
         {
-          "name": "splytoVotingDapp",
-          "writable": true
+          "name": "mint",
+          "docs": [
+            "The mint account to initialize"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "newMintAdderss"
+              }
+            ]
+          }
+        },
+        {
+          "name": "mintAuthority",
+          "docs": [
+            "The authority allowed to mint new tokens"
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "moderatorAta",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "mintAuthority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "newMintAdderss"
+        },
+        {
+          "name": "systemProgram",
+          "docs": [
+            "System program to create the account"
+          ],
+          "address": "11111111111111111111111111111111"
+        },
+        {
+          "name": "rent",
+          "docs": [
+            "Rent sysvar required for initialization"
+          ],
+          "address": "SysvarRent111111111111111111111111111111111"
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "SPL Token program to handle token logic"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "associatedTokenProgram",
+          "address": "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "decimals",
+          "type": "u8"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
     },
     {
-      "name": "initSplVote",
+      "name": "voteForToken",
       "discriminator": [
-        48,
-        34,
-        57,
-        42,
-        202,
-        73,
-        198,
-        152
+        195,
+        16,
+        25,
+        71,
+        94,
+        187,
+        242,
+        5
       ],
       "accounts": [
         {
@@ -77,16 +223,11 @@ export type SplytoVotingDapp = {
           "signer": true
         },
         {
-          "name": "splVoteAccount",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "mint"
+          "name": "userCheck",
+          "writable": true
         },
         {
           "name": "voterAta",
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -175,6 +316,13 @@ export type SplytoVotingDapp = {
           }
         },
         {
+          "name": "tokenVoteAccount",
+          "writable": true
+        },
+        {
+          "name": "mint"
+        },
+        {
           "name": "systemProgram",
           "address": "11111111111111111111111111111111"
         }
@@ -200,6 +348,19 @@ export type SplytoVotingDapp = {
         88,
         124
       ]
+    },
+    {
+      "name": "userCheck",
+      "discriminator": [
+        24,
+        124,
+        204,
+        149,
+        24,
+        255,
+        147,
+        246
+      ]
     }
   ],
   "errors": [
@@ -207,6 +368,11 @@ export type SplytoVotingDapp = {
       "code": 6000,
       "name": "noTokenFound",
       "msg": "User must own the token he vote fore"
+    },
+    {
+      "code": 6001,
+      "name": "userAlreadyVote",
+      "msg": "User already voted"
     }
   ],
   "types": [
@@ -222,6 +388,18 @@ export type SplytoVotingDapp = {
           {
             "name": "count",
             "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "userCheck",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "alreadyVoted",
+            "type": "bool"
           }
         ]
       }

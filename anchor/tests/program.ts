@@ -1,4 +1,5 @@
-import fs from 'fs'
+const fs = require('fs');
+
 import {Keypair} from '@solana/web3.js';
 
 
