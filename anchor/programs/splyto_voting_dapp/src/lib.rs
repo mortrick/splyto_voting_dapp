@@ -27,7 +27,7 @@ pub mod splyto_voting_dapp {
     Ok(())
   }
 
-  pub fn _nit_spl_vote(ctx: Context<InitializeSplVote>,token_name: String) -> Result<()> {
+  pub fn init_spl_vote(ctx: Context<InitializeSplVote>,token_name: String) -> Result<()> {
     _init_spl_vote(ctx,token_name)
     
   }

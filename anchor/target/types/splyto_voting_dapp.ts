@@ -14,16 +14,61 @@ export type SplytoVotingDapp = {
   },
   "instructions": [
     {
-      "name": "nitSplVote",
+      "name": "close",
       "discriminator": [
-        120,
+        98,
+        165,
+        201,
+        177,
+        108,
+        65,
+        206,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "splytoVotingDapp",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "increment",
+      "discriminator": [
+        11,
+        18,
+        104,
+        9,
+        104,
+        174,
+        59,
+        33
+      ],
+      "accounts": [
+        {
+          "name": "splytoVotingDapp",
+          "writable": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "initSplVote",
+      "discriminator": [
+        48,
+        34,
+        57,
+        42,
+        202,
         73,
-        111,
-        217,
-        187,
-        62,
-        195,
-        242
+        198,
+        152
       ],
       "accounts": [
         {
@@ -140,51 +185,6 @@ export type SplytoVotingDapp = {
           "type": "string"
         }
       ]
-    },
-    {
-      "name": "close",
-      "discriminator": [
-        98,
-        165,
-        201,
-        177,
-        108,
-        65,
-        206,
-        96
-      ],
-      "accounts": [
-        {
-          "name": "payer",
-          "writable": true,
-          "signer": true
-        },
-        {
-          "name": "splytoVotingDapp",
-          "writable": true
-        }
-      ],
-      "args": []
-    },
-    {
-      "name": "increment",
-      "discriminator": [
-        11,
-        18,
-        104,
-        9,
-        104,
-        174,
-        59,
-        33
-      ],
-      "accounts": [
-        {
-          "name": "splytoVotingDapp",
-          "writable": true
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
