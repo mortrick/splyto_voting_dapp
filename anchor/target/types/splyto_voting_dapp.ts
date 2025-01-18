@@ -60,13 +60,8 @@ export type SplytoVotingDapp = {
           "pda": {
             "seeds": [
               {
-                "kind": "const",
-                "value": [
-                  109,
-                  105,
-                  110,
-                  116
-                ]
+                "kind": "arg",
+                "path": "mintAddress"
               }
             ]
           }
@@ -110,8 +105,147 @@ export type SplytoVotingDapp = {
       ],
       "args": [
         {
+          "name": "mintAddress",
+          "type": "pubkey"
+        },
+        {
           "name": "decimals",
           "type": "u8"
+        }
+      ]
+    },
+    {
+      "name": "mintToAccount",
+      "discriminator": [
+        67,
+        25,
+        254,
+        173,
+        127,
+        166,
+        62,
+        85
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "docs": [
+            "The mint account to mint tokens from"
+          ],
+          "writable": true
+        },
+        {
+          "name": "tokenAccount",
+          "docs": [
+            "The token account to receive the minted tokens"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "mintAuthority"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  6,
+                  221,
+                  246,
+                  225,
+                  215,
+                  101,
+                  161,
+                  147,
+                  217,
+                  203,
+                  225,
+                  70,
+                  206,
+                  235,
+                  121,
+                  172,
+                  28,
+                  180,
+                  133,
+                  237,
+                  95,
+                  91,
+                  55,
+                  145,
+                  58,
+                  140,
+                  245,
+                  133,
+                  126,
+                  255,
+                  0,
+                  169
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "mintAuthority",
+          "docs": [
+            "The mint authority (must sign the transaction)"
+          ],
+          "signer": true
+        },
+        {
+          "name": "tokenProgram",
+          "docs": [
+            "The SPL Token program"
+          ],
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
         }
       ]
     },
