@@ -20,7 +20,7 @@ MODERATOR_WALLET=$1
 DECIMALS=9
 MINT_AMOUNT=1000000000000000  # Adjust as needed (e.g., 1,000,000 tokens)
 RECIPIENTS=("PL1SGKftANBR1skss6ssUcvXP3VxRKB4Adp2Ah6P6CG" "PL2XDZDENuobcSGn1XSXbk3z5dT1hnb53cJfipqXtUz" "PL3fRTsAPqkgboG1GtVMm2bDK4UhRbjP4WapfAwN4LF" "PL4aYh2uKwShoJf5QSQUQZfjs7AeDRr85rTY8tBe8Rv" "PL5FTKumPGRB2cKJJ5sqxXpEZz9vf8SBeejfrD3LJYH" "PL64WAE6nNLUtTqgySsiSRmD2veg4dpE9NWiE1PKfUt" "PL7EAuFve2HhGWZCx5C9sb1b9UK64Eg967Ecubw6bdy" "PL8ECUyd74bx9VrJA9kMojwTN3xaVxxU8h8t9q3o7od" "PL9pTvrWeursZAwRHH4qnWbHL4FoAC2vKPjVYBze5uY" "P11qCP9z4NwtVjFu39cgcPfcAD8dEpcFXWWpYkD7AKf" "P12LyPLHcrDDETQnMdYwT2CGtETU6XxAUrPSM6Qz1oX" "FEEPu3ku9ZCCGCoRt4KwxcqLioG6Hvfh6WwgAJvcLh3y" "TSTFQQptFQAbFMVvEJLSZXMsHtTMcxy3bvRSvR9SHFE") # Replace with actual addresses
-SEND_AMOUNT=1000000000000    # Amount to send to each recipient (adjust as needed)
+SEND_AMOUNT=10000000    # Amount to send to each recipient (adjust as needed)
 
 # Check if the moderator wallet file exists
 if [ ! -f "$MODERATOR_WALLET" ]; then
@@ -40,7 +40,7 @@ if [ -z "$TOKEN_MINT" ]; then
 fi
 echo "Token created: $TOKEN_MINT"
 
-# Step 2: Create an associated token account for the wallet
+# Step 2: Create an associated token account for the moderator wallet
 echo "Creating an associated token account for the moderator wallet..."
 TOKEN_ACCOUNT=$(spl-token create-account "$TOKEN_MINT" | awk '/Creating account/ {print $3}')
 if [ -z "$TOKEN_ACCOUNT" ]; then
@@ -57,15 +57,16 @@ spl-token mint "$TOKEN_MINT" "$MINT_AMOUNT" || {
 }
 echo "Minted $MINT_AMOUNT tokens to $TOKEN_ACCOUNT"
 
-# Step 4: Send tokens to 5 recipient addresses
+# Step 4: Send tokens to recipient addresses
 for RECIPIENT in "${RECIPIENTS[@]}"; do
   echo "Sending $SEND_AMOUNT tokens to $RECIPIENT..."
   
-  # Transfer tokens and fund the recipient's ATA if it doesn't exist
-  spl-token transfer "$TOKEN_MINT" "$SEND_AMOUNT" "$RECIPIENT" --fund-recipient || {
+  # Transfer tokens using the moderator wallet as the sender
+  spl-token transfer "$TOKEN_MINT" "$SEND_AMOUNT" "$RECIPIENT" --fund-recipient --allow-unfunded-recipient --from "$TOKEN_ACCOUNT" || {
     echo "Error: Failed to send tokens to $RECIPIENT. Exiting."
     exit 1
   }
+  
   echo "Sent $SEND_AMOUNT tokens to $RECIPIENT"
 done
 
