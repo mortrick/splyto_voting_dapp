@@ -3,26 +3,46 @@ import { ExplorerLink } from '../cluster/cluster-ui'
 import { WalletButton } from '../solana/solana-provider'
 import { AppHero, ellipsify } from '../ui/ui-layout'
 import { useSplytoVotingDappProgram } from './splyto_voting_dapp-data-access'
-import { SplytoVotingDappCreate, SplytoVotingDappList } from './splyto_voting_dapp-ui'
+import { SplytoVotingDapp, SplytoVotingDappCard } from './splyto_voting_dapp-ui'
+import { useState } from 'react'
+import { PublicKey } from '@solana/web3.js'
 
 export default function SplytoVotingDappFeature() {
   const { publicKey } = useWallet()
   const { programId } = useSplytoVotingDappProgram()
+  const [splTokenToVote, setSplTokenToVote] = useState<PublicKey | undefined>();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.trim();
+    try {
+      setSplTokenToVote(value ? new PublicKey(value) : undefined);
+    } catch (error) {
+      console.error("Invalid public key input:", error);
+      setSplTokenToVote(undefined);
+    }
+  };
 
   return publicKey ? (
     <div>
       <AppHero
-        title="SplytoVotingDapp"
-        subtitle={
-          'Create a new account by clicking the "Create" button. The state of a account is stored on-chain and can be manipulated by calling the program\'s methods (increment, decrement, set, and close).'
-        }
+        title="Splyto Voting Dapp"
+        subtitle="Cast your vote for a token by entering its SPL token address. All votes are recorded on-chain."
       >
+        <label className="block mb-2">
+          Token Address:
+          <input
+            type="text"
+            onChange={handleInputChange}
+            placeholder="Enter SPL Token Address"
+            className="block w-full p-2 border rounded"
+          />
+        </label>
         <p className="mb-6">
           <ExplorerLink path={`account/${programId}`} label={ellipsify(programId.toString())} />
         </p>
-        <SplytoVotingDappCreate />
+        <SplytoVotingDapp mint={splTokenToVote} />
       </AppHero>
-      <SplytoVotingDappList />
+      {/* <SplytoVotingDappCard /> */}
     </div>
   ) : (
     <div className="max-w-4xl mx-auto">
@@ -32,5 +52,5 @@ export default function SplytoVotingDappFeature() {
         </div>
       </div>
     </div>
-  )
+  );
 }

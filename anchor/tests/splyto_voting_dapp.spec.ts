@@ -58,7 +58,7 @@ splytoVotingDapp = new Program<SplytoVotingDapp>(
 })
 
 
-  let new_mint = new PublicKey("J2TrbLkpwURvLNHo4vauPsDJFq348C4m4ZzLPA4zzaxe");
+  let new_mint = new PublicKey("CoexRro7Y7gXsfZCaZ3hVz588mfLEDcRdb3br7Jcgo9i");
 
   let [voting_address ,mint_bump] = PublicKey.findProgramAddressSync(
     [new_mint.toBuffer()],
@@ -66,7 +66,7 @@ splytoVotingDapp = new Program<SplytoVotingDapp>(
   )
 // // The mint address created 
   let [wallet_ata ,ata_bump] = PublicKey.findProgramAddressSync(
-    [voting_address.toBuffer()],
+    [voting_address.toBuffer(), MOD.publicKey.toBuffer()],
     splVotingAddress
   )
 

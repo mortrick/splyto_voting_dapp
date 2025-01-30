@@ -1,38 +1,58 @@
 import { Keypair, PublicKey } from '@solana/web3.js'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { ExplorerLink } from '../cluster/cluster-ui'
 import { ellipsify } from '../ui/ui-layout'
 import { useSplytoVotingDappProgram, useSplytoVotingDappProgramAccount } from './splyto_voting_dapp-data-access'
+import { useWallet } from '@solana/wallet-adapter-react'
 
-export function SplytoVotingDappCreate() {
-  const { initialize } = useSplytoVotingDappProgram()
+import { useTransactionToast } from '../ui/ui-layout'
 
-  return (
-    <button
-      className="btn btn-xs lg:btn-md btn-primary"
-      onClick={() => initialize.mutateAsync(Keypair.generate())}
-      disabled={initialize.isPending}
-    >
-      Create {initialize.isPending && '...'}
-    </button>
-  )
-}
+export const splVotingAddress: PublicKey = new PublicKey("6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E");
+const mint_constant = new PublicKey('9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v');
 
-export function SplytoVotingDappList() {
-  const { accounts, getProgramAccount } = useSplytoVotingDappProgram()
+export function SplytoVotingDapp({mint}: {mint: PublicKey| undefined}) {
+  const { accounts, getProgramAccount, vote } = useSplytoVotingDappProgram();
+  const current_wallet = useWallet();
+  const [voteInput, setVoteInput] = useState('');
+
+  const handleVote = async () => {
+    if (!current_wallet.connected || !current_wallet.publicKey) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    if (!voteInput.trim()) {
+      alert('Please enter a valid token name');
+      return;
+    }
+
+    try {
+      await vote.mutateAsync({ name: voteInput, mint_param: mint });
+      setVoteInput(''); // Reset input field after voting
+    } catch (err) {
+      console.error("Error voting: ", err);
+    }
+  };
 
   if (getProgramAccount.isLoading) {
-    return <span className="loading loading-spinner loading-lg"></span>
+    return <span className="loading loading-spinner loading-lg"></span>;
   }
-  if (!getProgramAccount.data?.value) {
-    return (
-      <div className="alert alert-info flex justify-center">
-        <span>Program account not found. Make sure you have deployed the program and are on the correct cluster.</span>
-      </div>
-    )
-  }
+
   return (
-    <div className={'space-y-6'}>
+    <div className="space-y-6">
+      <div className="flex flex-col items-center space-y-4">
+        <input
+          type="text"
+          className="input input-bordered w-full max-w-xs"
+          placeholder="Enter token name to vote"
+          value={voteInput}
+          onChange={(e) => setVoteInput(e.target.value)}
+        />
+        <button className="btn btn-primary" onClick={handleVote}>
+          Vote
+        </button>
+      </div>
+
       {accounts.isLoading ? (
         <span className="loading loading-spinner loading-lg"></span>
       ) : accounts.data?.length ? (
@@ -44,19 +64,17 @@ export function SplytoVotingDappList() {
       ) : (
         <div className="text-center">
           <h2 className={'text-2xl'}>No accounts</h2>
-          No accounts found. Create one above to get started.
+          <p>No voting records found. Cast a vote to get started.</p>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function SplytoVotingDappCard({ account }: { account: PublicKey }) {
-  const { accountQuery, incrementMutation, setMutation, decrementMutation, closeMutation } = useSplytoVotingDappProgramAccount({
-    account,
-  })
+export function SplytoVotingDappCard({ account }: { account: PublicKey }) {
+  const { accountQuery, closeMutation } = useSplytoVotingDappProgramAccount({ account });
 
-  const count = useMemo(() => accountQuery.data?.count ?? 0, [accountQuery.data?.count])
+  const count = useMemo(() => accountQuery.data?.count ?? 0, [accountQuery.data?.count]);
 
   return accountQuery.isLoading ? (
     <span className="loading loading-spinner loading-lg"></span>
@@ -67,35 +85,6 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
           <h2 className="card-title justify-center text-3xl cursor-pointer" onClick={() => accountQuery.refetch()}>
             {count}
           </h2>
-          <div className="card-actions justify-around">
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => incrementMutation.mutateAsync()}
-              disabled={incrementMutation.isPending}
-            >
-              Increment
-            </button>
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => {
-                const value = window.prompt('Set value to:', count.toString() ?? '0')
-                if (!value || parseInt(value) === count || isNaN(parseInt(value))) {
-                  return
-                }
-                return setMutation.mutateAsync(parseInt(value))
-              }}
-              disabled={setMutation.isPending}
-            >
-              Set
-            </button>
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => decrementMutation.mutateAsync()}
-              disabled={decrementMutation.isPending}
-            >
-              Decrement
-            </button>
-          </div>
           <div className="text-center space-y-4">
             <p>
               <ExplorerLink path={`account/${account}`} label={ellipsify(account.toString())} />
@@ -104,9 +93,9 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
               className="btn btn-xs btn-secondary btn-outline"
               onClick={() => {
                 if (!window.confirm('Are you sure you want to close this account?')) {
-                  return
+                  return;
                 }
-                return closeMutation.mutateAsync()
+                return closeMutation.mutateAsync();
               }}
               disabled={closeMutation.isPending}
             >
@@ -116,5 +105,5 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

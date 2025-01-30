@@ -1,15 +1,20 @@
-import { getSplytoVotingDappProgram, getSplytoVotingDappProgramId } from '@project/anchor'
-import { useConnection } from '@solana/wallet-adapter-react'
-import { Cluster, Keypair, PublicKey } from '@solana/web3.js'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { getSplytoVotingDappProgram, getSplytoVotingDappProgramId } from '@project/anchor';
+import { useConnection } from '@solana/wallet-adapter-react';
+import { Cluster, Keypair, PublicKey } from '@solana/web3.js';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
+import toast from 'react-hot-toast';
+import { useCluster } from '../cluster/cluster-data-access';
+import { useAnchorProvider } from '../solana/solana-provider';
+import { useTransactionToast } from '../ui/ui-layout';
+import { useWallet } from '@solana/wallet-adapter-react';
+import {getUserTokensAccount} from './utils';
+export const splVotingAddress: PublicKey = new PublicKey("6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E");
+const mint = new PublicKey('9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v');
 
-import { useMemo } from 'react'
-import toast from 'react-hot-toast'
-import { useCluster } from '../cluster/cluster-data-access'
-import { useAnchorProvider } from '../solana/solana-provider'
-import { useTransactionToast } from '../ui/ui-layout'
 
 export function useSplytoVotingDappProgram() {
+  const user_wallet = useWallet()
   const { connection } = useConnection()
   const { cluster } = useCluster()
   const transactionToast = useTransactionToast()
@@ -19,7 +24,7 @@ export function useSplytoVotingDappProgram() {
 
   const accounts = useQuery({
     queryKey: ['splyto_voting_dapp', 'all', { cluster }],
-    queryFn: () => program.account.splyto_voting_dapp.all(),
+    queryFn: () => program.account.splytoVotingDapp.all(),
   })
 
   const getProgramAccount = useQuery({
@@ -27,23 +32,49 @@ export function useSplytoVotingDappProgram() {
     queryFn: () => connection.getParsedAccountInfo(programId),
   })
 
-  const initialize = useMutation({
-    mutationKey: ['splyto_voting_dapp', 'initialize', { cluster }],
-    mutationFn: (keypair: Keypair) =>
-      program.methods.initialize().accounts({ splyto_voting_dapp: keypair.publicKey }).signers([keypair]).rpc(),
-    onSuccess: (signature) => {
-      transactionToast(signature)
-      return accounts.refetch()
-    },
-    onError: () => toast.error('Failed to initialize account'),
-  })
+  const getAccount = useQuery({
+    queryKey: ['voting', 'getVotingDapp', { cluster }],
+    queryFn: async ({ queryKey }) => {
+      const [, , { tokenAccountPubkey }] = queryKey as [string, string, { tokenAccountPubkey: PublicKey }];
+      let res = await program.account.splytoVotingDapp.fetch(tokenAccountPubkey);
+      return res
+    }
+       });
+  
 
+  const vote = useMutation({
+    mutationKey: ['splyto_voting_dapp', 'vote', cluster],
+    mutationFn: async ({ name, mint_param }: { name: string, mint_param: PublicKey| undefined }) => {
+      if (!user_wallet.connected || !user_wallet.publicKey ){
+      console.log("Please connect wallet ")
+    }else 
+    {
+      let [mint_pda,b,wallet_ata,d] = getUserTokensAccount(mint_param,user_wallet.publicKey);
+      try {
+        if (mint_param != undefined && wallet_ata !=undefined && mint_pda){
+        let sig = await program.methods.voteForToken(name).accounts({
+          voter: user_wallet.publicKey,
+          mint: mint_param,
+          userCheck: wallet_ata, // Added missing account
+          tokenVoteAccount: mint_pda, // Ensure this is correctly derived
+        }).signers([]).rpc();
+        console.log("Transaction Signature:", sig);
+      }
+        
+      } catch (error) {
+        console.error("Voting failed:", error);
+      }
+ 
+    }
+    },
+  });
+ 
   return {
     program,
     programId,
     accounts,
-    getProgramAccount,
-    initialize,
+    getProgramAccount,vote
+
   }
 }
 
@@ -54,50 +85,24 @@ export function useSplytoVotingDappProgramAccount({ account }: { account: Public
 
   const accountQuery = useQuery({
     queryKey: ['splyto_voting_dapp', 'fetch', { cluster, account }],
-    queryFn: () => program.account.splyto_voting_dapp.fetch(account),
+    queryFn: () => program.account.splytoVotingDapp.fetch(account),
   })
 
   const closeMutation = useMutation({
     mutationKey: ['splyto_voting_dapp', 'close', { cluster, account }],
-    mutationFn: () => program.methods.close().accounts({ splyto_voting_dapp: account }).rpc(),
+    mutationFn: () => program.methods.close().accounts({ splytoVotingDapp: account }).rpc(),
     onSuccess: (tx) => {
       transactionToast(tx)
       return accounts.refetch()
     },
   })
 
-  const decrementMutation = useMutation({
-    mutationKey: ['splyto_voting_dapp', 'decrement', { cluster, account }],
-    mutationFn: () => program.methods.decrement().accounts({ splyto_voting_dapp: account }).rpc(),
-    onSuccess: (tx) => {
-      transactionToast(tx)
-      return accountQuery.refetch()
-    },
-  })
 
-  const incrementMutation = useMutation({
-    mutationKey: ['splyto_voting_dapp', 'increment', { cluster, account }],
-    mutationFn: () => program.methods.increment().accounts({ splyto_voting_dapp: account }).rpc(),
-    onSuccess: (tx) => {
-      transactionToast(tx)
-      return accountQuery.refetch()
-    },
-  })
 
-  const setMutation = useMutation({
-    mutationKey: ['splyto_voting_dapp', 'set', { cluster, account }],
-    mutationFn: (value: number) => program.methods.set(value).accounts({ splyto_voting_dapp: account }).rpc(),
-    onSuccess: (tx) => {
-      transactionToast(tx)
-      return accountQuery.refetch()
-    },
-  })
+
 
   return {
     accountQuery,
     closeMutation,
-    decrementMutation,
-    incrementMutation,
-    setMutation,
   }
 }

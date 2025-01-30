@@ -1,0 +1,51 @@
+spl-token create-token
+spl-token mint <TOKEN_MINT_ADDRESS> <AMOUNT> <ACCOUNT_ADDRESS>
+spl-token authorize <TOKEN_MINT_ADDRESS> mint --disable
+
+
+PL4 Before 16851470
+
+
+
+PL1SGKftANBR1skss6ssUcvXP3VxRKB4Adp2Ah6P6CG
+PL2XDZDENuobcSGn1XSXbk3z5dT1hnb53cJfipqXtUz
+PL3fRTsAPqkgboG1GtVMm2bDK4UhRbjP4WapfAwN4LF
+PL4aYh2uKwShoJf5QSQUQZfjs7AeDRr85rTY8tBe8Rv
+PL5FTKumPGRB2cKJJ5sqxXpEZz9vf8SBeejfrD3LJYH
+PL64WAE6nNLUtTqgySsiSRmD2veg4dpE9NWiE1PKfUt
+PL7EAuFve2HhGWZCx5C9sb1b9UK64Eg967Ecubw6bdy
+PL8ECUyd74bx9VrJA9kMojwTN3xaVxxU8h8t9q3o7od
+PL9pTvrWeursZAwRHH4qnWbHL4FoAC2vKPjVYBze5uY
+P11qCP9z4NwtVjFu39cgcPfcAD8dEpcFXWWpYkD7AKf
+P12LyPLHcrDDETQnMdYwT2CGtETU6XxAUrPSM6Qz1oX
+
+
+FEEPu3ku9ZCCGCoRt4KwxcqLioG6Hvfh6WwgAJvcLh3y  
+TSTFQQptFQAbFMVvEJLSZXMsHtTMcxy3bvRSvR9SHFE
+MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4   
+        
+
+
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL1SGKftANBR1skss6ssUcvXP3VxRKB4Adp2Ah6P6CG --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL2XDZDENuobcSGn1XSXbk3z5dT1hnb53cJfipqXtUz --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL3fRTsAPqkgboG1GtVMm2bDK4UhRbjP4WapfAwN4LF --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL4aYh2uKwShoJf5QSQUQZfjs7AeDRr85rTY8tBe8Rv --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL5FTKumPGRB2cKJJ5sqxXpEZz9vf8SBeejfrD3LJYH --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL64WAE6nNLUtTqgySsiSRmD2veg4dpE9NWiE1PKfUt --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL7EAuFve2HhGWZCx5C9sb1b9UK64Eg967Ecubw6bdy --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL8ECUyd74bx9VrJA9kMojwTN3xaVxxU8h8t9q3o7od --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 PL9pTvrWeursZAwRHH4qnWbHL4FoAC2vKPjVYBze5uY --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 P11qCP9z4NwtVjFu39cgcPfcAD8dEpcFXWWpYkD7AKf --allow-unfunded-recipient
+spl-token transfer --fund-recipient --fee-payer ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json  --owner ../src/MDRgRNgv77eYKw7L3mJuK5RR8gukz5MYdxVcyUKo9o4.json 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v 100000000 P12LyPLHcrDDETQnMdYwT2CGtETU6XxAUrPSM6Qz1oX --allow-unfunded-recipient
+
+
+
+Mint Address 9kXBvCNrXoVRU1M1z1AfxVoAeLCdCHicTwjYymVTDH6v
+
+
+
+
+
+solana airdrop 1  -u devnet # for Devnet# or solana airdrop 1 YOUR_PHANTOM_WALLET_ADDRESS -u testnet # for Testnet# or solana airdrop 1 YOUR_PHANTOM_WALLET_ADDRESS -u localhost # for Localhost (local validator must be running)# or solana airdrop 1 YOUR_PHANTOM_WALLET_ADDRESS -u https://example.solana.quiknode.pro/000000/
+
+
