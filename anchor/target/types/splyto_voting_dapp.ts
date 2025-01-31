@@ -139,7 +139,6 @@ export type SplytoVotingDapp = {
           "docs": [
             "The token account to receive the minted tokens"
           ],
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -269,7 +268,19 @@ export type SplytoVotingDapp = {
         },
         {
           "name": "userCheck",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "voter"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "voterAta",
@@ -362,7 +373,15 @@ export type SplytoVotingDapp = {
         },
         {
           "name": "tokenVoteAccount",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "mint"

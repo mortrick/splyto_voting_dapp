@@ -133,7 +133,6 @@
           "docs": [
             "The token account to receive the minted tokens"
           ],
-          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -263,7 +262,19 @@
         },
         {
           "name": "user_check",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "voter"
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "voter_ata",
@@ -356,7 +367,15 @@
         },
         {
           "name": "token_vote_account",
-          "writable": true
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "mint"
+              }
+            ]
+          }
         },
         {
           "name": "mint"
