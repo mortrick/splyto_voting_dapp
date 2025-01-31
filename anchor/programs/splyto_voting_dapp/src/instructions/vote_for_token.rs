@@ -22,10 +22,8 @@ pub fn _vote_for_token(ctx: Context<VoteForToken>,token_name: String) -> Result<
     msg!("The generated voting address is {}", user_check.key());
     user_check.already_voted = true;
     token_vote_account.count +=1;
-    
-
-
     Ok(())
+
     // if user_check.to_account_info().data_is_empty(){
     //     let rent = Rent::get()?;
     //     let lamports = rent.minimum_balance(UserCheck::INIT_SPACE);

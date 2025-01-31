@@ -1,27 +1,75 @@
 import { useWallet } from '@solana/wallet-adapter-react'
-import { ExplorerLink } from '../cluster/cluster-ui'
 import { WalletButton } from '../solana/solana-provider'
-import { AppHero, ellipsify } from '../ui/ui-layout'
+import { AppHero } from '../ui/ui-layout'
 import { useSplytoVotingDappProgram } from './splyto_voting_dapp-data-access'
-import { SplytoVotingDappCreate, SplytoVotingDappList } from './splyto_voting_dapp-ui'
+import { SplytoVotingDappList } from './splyto_voting_dapp-ui'
+import { useState } from 'react'
+import { PublicKey } from '@solana/web3.js'
 
 export default function SplytoVotingDappFeature() {
   const { publicKey } = useWallet()
-  const { programId } = useSplytoVotingDappProgram()
+  const { vote_for_token } = useSplytoVotingDappProgram()
+
+  // State for inputs
+  const [tokenName, setTokenName] = useState("")
+  const [tokenMint, setTokenMint] = useState<string>("")
+
+  const handleVote = async () => {
+    if (!tokenName.trim()) {
+      alert("Please enter a valid token name")
+      return
+    }
+
+    let mintPubkey: PublicKey
+    try {
+      mintPubkey = new PublicKey(tokenMint)
+    } catch (error) {
+      alert("Invalid token mint address")
+      return
+    }
+
+    try {
+      await vote_for_token.mutateAsync({
+        token_name: tokenName,
+        token_mint: mintPubkey
+      })
+      setTokenName("")
+      setTokenMint("")
+    } catch (error) {
+      console.error("Voting failed:", error)
+    }
+  }
 
   return publicKey ? (
     <div>
-      <AppHero
-        title="SplytoVotingDapp"
-        subtitle={
-          'Create a new account by clicking the "Create" button. The state of a account is stored on-chain and can be manipulated by calling the program\'s methods (increment, decrement, set, and close).'
-        }
-      >
-        <p className="mb-6">
-          <ExplorerLink path={`account/${programId}`} label={ellipsify(programId.toString())} />
-        </p>
-        <SplytoVotingDappCreate />
+      <AppHero title="Splyto Voting Dapp" subtitle="Add your SPL Token for voting">
+        <div className="space-y-4">
+          {/* Token Name Input */}
+          <input
+            type="text"
+            placeholder="Enter Token Name"
+            className="input input-bordered w-full max-w-xs"
+            value={tokenName}
+            onChange={(e) => setTokenName(e.target.value)}
+          />
+
+          {/* Token Mint Input */}
+          <input
+            type="text"
+            placeholder="Enter Token Mint Address"
+            className="input input-bordered w-full max-w-xs"
+            value={tokenMint}
+            onChange={(e) => setTokenMint(e.target.value)}
+          />
+
+          {/* Vote Button */}
+          <button className="btn btn-primary" onClick={handleVote} disabled={vote_for_token.isPending}>
+            {vote_for_token.isPending ? "Voting..." : "Vote"}
+          </button>
+        </div>
       </AppHero>
+
+      {/* Display List of Voted Tokens */}
       <SplytoVotingDappList />
     </div>
   ) : (

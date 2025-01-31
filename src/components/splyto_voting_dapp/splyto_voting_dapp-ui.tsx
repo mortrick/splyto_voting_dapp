@@ -3,17 +3,23 @@ import { useMemo } from 'react'
 import { ExplorerLink } from '../cluster/cluster-ui'
 import { ellipsify } from '../ui/ui-layout'
 import { useSplytoVotingDappProgram, useSplytoVotingDappProgramAccount } from './splyto_voting_dapp-data-access'
+import { useConnection , useWallet} from '@solana/wallet-adapter-react'
+
+
 
 export function SplytoVotingDappCreate() {
-  const { initialize } = useSplytoVotingDappProgram()
+  const new_mint = new PublicKey("DiQXEvkZTigzsRebyAYe5xygArG3hHQ4ksUWXSHMs3XU");
+  const { vote_for_token } = useSplytoVotingDappProgram()
+
+  const current_wallet = useWallet()
 
   return (
     <button
       className="btn btn-xs lg:btn-md btn-primary"
-      onClick={() => initialize.mutateAsync(Keypair.generate())}
-      disabled={initialize.isPending}
+      onClick={() => vote_for_token.mutateAsync({token_name: 'Moshe', token_mint:new_mint })}
+      disabled={vote_for_token.isPending}
     >
-      Create {initialize.isPending && '...'}
+      Create {vote_for_token.isPending && '...'}
     </button>
   )
 }
@@ -52,7 +58,7 @@ export function SplytoVotingDappList() {
 }
 
 function SplytoVotingDappCard({ account }: { account: PublicKey }) {
-  const { accountQuery, incrementMutation, setMutation, decrementMutation, closeMutation } = useSplytoVotingDappProgramAccount({
+  const { accountQuery, } = useSplytoVotingDappProgramAccount({
     account,
   })
 
@@ -68,13 +74,13 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
             {count}
           </h2>
           <div className="card-actions justify-around">
-            <button
+            {/* <button
               className="btn btn-xs lg:btn-md btn-outline"
               onClick={() => incrementMutation.mutateAsync()}
               disabled={incrementMutation.isPending}
             >
               Increment
-            </button>
+            </button> */}
             <button
               className="btn btn-xs lg:btn-md btn-outline"
               onClick={() => {
@@ -82,16 +88,16 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
                 if (!value || parseInt(value) === count || isNaN(parseInt(value))) {
                   return
                 }
-                return setMutation.mutateAsync(parseInt(value))
+                // return setMutation.mutateAsync(parseInt(value))
               }}
-              disabled={setMutation.isPending}
+              // disabled={setMutation.isPending}
             >
               Set
             </button>
             <button
               className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => decrementMutation.mutateAsync()}
-              disabled={decrementMutation.isPending}
+              // onClick={() => decrementMutation.mutateAsync()}
+              // disabled={decrementMutation.isPending}
             >
               Decrement
             </button>
@@ -106,9 +112,9 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
                 if (!window.confirm('Are you sure you want to close this account?')) {
                   return
                 }
-                return closeMutation.mutateAsync()
+                // return closeMutation.mutateAsync()
               }}
-              disabled={closeMutation.isPending}
+              // disabled={closeMutation.isPending}
             >
               Close
             </button>
