@@ -5,7 +5,7 @@ import { Program } from '@coral-xyz/anchor';
 // import fs from 'fs'
 // import { AnchorProvider } from '@project-serum/anchor';
 
-const theDapokerAddress: PublicKey = new PublicKey("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
+const theDapokerAddress: PublicKey = new PublicKey("6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E");
 
 
 
@@ -223,4 +223,18 @@ export function findPDAAndPrint(run_id: number, programId: PublicKey) {
     const runIdString = `${year}${month}${day}${hours}${minutes}${seconds}`;
     // const runIdnumber = Number(runIdString)
     return +runIdString; // Convert the string to a number
+}
+
+
+
+
+
+
+
+
+
+
+export interface Pole {
+  token_name: string,
+  counter: number
 }

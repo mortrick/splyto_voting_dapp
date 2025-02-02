@@ -2,7 +2,7 @@ import { getSplytoVotingDappProgram, getSplytoVotingDappProgramId } from '@proje
 import { useConnection , useWallet} from '@solana/wallet-adapter-react'
 import { Cluster, Keypair, PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
-
+import * as anchor from '@coral-xyz/anchor'
 import { useMemo } from 'react'
 import toast from 'react-hot-toast'
 import { useCluster } from '../cluster/cluster-data-access'
@@ -12,8 +12,7 @@ import { PL1, PL2,PL3, PL4,PL5, PL6,PL7,PL8,PL9,P11,P12, MOD} from './utils'
 
 
 
-
-
+// const new_mint = new PublicKey("4pqgB8YY8u8LnFA9AcsWUKFNbeo2SmZK89A62gWNZCFN")
 export function useSplytoVotingDappProgram() {
 const current_wallet =useWallet()
 const new_mint = new PublicKey("DiQXEvkZTigzsRebyAYe5xygArG3hHQ4ksUWXSHMs3XU");
@@ -36,7 +35,14 @@ const new_mint = new PublicKey("DiQXEvkZTigzsRebyAYe5xygArG3hHQ4ksUWXSHMs3XU");
     queryFn: () => connection.getParsedAccountInfo(programId),
   })
 
-  const vote_for_token = useMutation({
+  const getPoleAccount = useMutation({
+    mutationKey: ['splyt_voting_dapp', 'fetchAccount', { cluster }],
+    mutationFn: async (accountPublicKey: PublicKey) => {
+      return await program.account.splytoVotingDapp.fetch(accountPublicKey);
+    },
+  });
+
+  const VoteForToken = useMutation({
     mutationKey: ['splyto_voting_dapp', 'vote_for_token', { cluster }],
     mutationFn: async ({ token_name, token_mint }: { token_name: string; token_mint: PublicKey }) => {
       const voter = current_wallet.publicKey;
@@ -44,29 +50,51 @@ const new_mint = new PublicKey("DiQXEvkZTigzsRebyAYe5xygArG3hHQ4ksUWXSHMs3XU");
         throw new Error("Wallet is not connected");
       }
   
-      return await program.methods
-        .voteForToken(token_name)
-        .accounts({ 
-          voter: voter,
-          mint: token_mint
-        })
-        .signers([])
-        .rpc();
+      // ✅ Derive PDA addresses (same as test file)
+      const [tokenVoteAccountPDA, tokenVoteBump] = PublicKey.findProgramAddressSync(
+        [token_mint.toBuffer()],
+        programId
+      );
+  
+      const [userCheckPDA, userCheckBump] = PublicKey.findProgramAddressSync(
+        [voter.toBuffer(), token_mint.toBuffer()],
+        programId
+      );
+  
+      console.log("⏳ Submitting Vote Transaction...");
+      console.log("🔑 Voter: ", voter.toBase58());
+      console.log("🗳️ Token Name: ", token_name);
+      console.log("🧩 Token Mint: ", token_mint.toBase58());
+      console.log("📌 Token Vote Account PDA: ", tokenVoteAccountPDA.toBase58(), " (Bump: ", tokenVoteBump, ")");
+      console.log("👤 User Check PDA: ", userCheckPDA.toBase58(), " (Bump: ", userCheckBump, ")");
+  
+      try {
+       const sig = await program.methods.voteForToken('TokenY').accounts({
+        voter: voter,
+        mint: new_mint
+       }).signers([]).rpc()
+        console.log("✅ Vote submitted successfully! Signature:", sig);
+  
+        return sig;
+      } catch (error) {
+        console.error("❌ Error Voting:", error);
+        throw error;
+      }
     },
     onSuccess: (signature) => {
       transactionToast(signature);
       return accounts.refetch();
     },
-    onError: () => toast.error('Failed to initialize account'),
+    onError: () => toast.error('Failed to vote'),
   });
   
-
   return {
     program,
     programId,
     accounts,
     getProgramAccount,
-    vote_for_token,
+    VoteForToken,
+    getPoleAccount
   }
 }
 

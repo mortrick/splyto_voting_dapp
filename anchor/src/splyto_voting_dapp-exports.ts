@@ -21,7 +21,7 @@ export function getSplytoVotingDappProgramId(cluster: Cluster) {
     case 'devnet':
     case 'testnet':
       // This is the program ID for the SplytoVotingDapp program on devnet and testnet.
-      return new PublicKey('coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF')
+      return new PublicKey('6K3472KcyJ65ZnK2bYF1Mgo3KJzGS6eqcWa9kEPd7y6E')
     case 'mainnet-beta':
     default:
       return SPLYTO_VOTING_DAPP_PROGRAM_ID

@@ -60,7 +60,7 @@ splVotingAddress
 // User check pubkey account
 [user_check_pubkey ,bump1] = PublicKey.findProgramAddressSync(
 [MOD.publicKey.toBuffer(), mint.toBuffer()],
-splVotingAddress
+splVotingAddress 
 ) 
 
 
@@ -70,12 +70,12 @@ console.log("The User check account address is  ", user_check_pubkey);
 const sig = await splytoVotingDapp.methods.voteForToken(
   "TokenY"
 ).accounts({
-  voter: MOD.publicKey,
+  voter: PL1.publicKey,
   mint: mint,
   // userCheck: user_check_pubkey,
   // tokenVoteAccount: token_vote_acc_add
 
-}).signers([MOD]).rpc();
+}).signers([PL1]).rpc();
 
 console.log("sig", sig);
 

@@ -1,28 +1,90 @@
-import { Keypair, PublicKey } from '@solana/web3.js'
-import { useMemo } from 'react'
+import { Keypair, PublicKey,Cluster, VOTE_PROGRAM_ID } from '@solana/web3.js'
+import { useMemo, useState } from 'react'
 import { ExplorerLink } from '../cluster/cluster-ui'
 import { ellipsify } from '../ui/ui-layout'
 import { useSplytoVotingDappProgram, useSplytoVotingDappProgramAccount } from './splyto_voting_dapp-data-access'
-import { useConnection , useWallet} from '@solana/wallet-adapter-react'
+import { useConnection , useWallet} from '@solana/wallet-adapter-react';
+import React from 'react';
+import {Pole} from "./utils"
+import { useCluster } from '../cluster/cluster-data-access'
+import {getSplytoVotingDappProgramId} from "../../../anchor/src/splyto_voting_dapp-exports"
 
 
+export const MemoizedVote = React.memo(function VoteButton({
+  token_name, 
+  token_mint
+}: {
+  token_name: string;
+  token_mint: PublicKey;
+}) {
+  const user_wallet = useWallet();
+  const { VoteForToken, getPoleAccount } = useSplytoVotingDappProgram();
+  const { cluster } = useCluster();
 
-export function SplytoVotingDappCreate() {
-  const new_mint = new PublicKey("DiQXEvkZTigzsRebyAYe5xygArG3hHQ4ksUWXSHMs3XU");
-  const { vote_for_token } = useSplytoVotingDappProgram()
+  const [pole, setPole] = useState<Pole | null>(null);
+  const [isVoting, setIsVoting] = useState(false);
+  const programId = useMemo(
+    () => getSplytoVotingDappProgramId(cluster.network as Cluster),
+    [cluster.network]
+  );
 
-  const current_wallet = useWallet()
+  const fetchPoleData = async (accountPublicKey: PublicKey) => {
+    try {
+      const pole_data = await getPoleAccount.mutateAsync(accountPublicKey);
+      setPole({
+        counter: pole_data.count,
+        token_name: pole_data.tokenName
+      });
+    } catch (error) {
+      console.error("Error fetching table data or token not exists:", error);
+    }
+  };
+
+  const handleVote = async () => {
+    if (isVoting) return;
+
+    try {
+      if (!user_wallet.connected || !user_wallet.publicKey) {
+        alert("Please connect your wallet first");
+        return;
+      }
+
+      setIsVoting(true);
+const cmint = new PublicKey("4pqgB8YY8u8LnFA9AcsWUKFNbeo2SmZK89A62gWNZCFN")
+      const sig = await VoteForToken.mutateAsync({
+        token_name: "ddd",
+        token_mint: cmint
+      });
+      console.log("Signature: ", sig);
+
+      // const [token_vote_acc_add, bump] = PublicKey.findProgramAddressSync(
+      //   [token_mint.toBuffer()],
+      //   programId
+      // );
+
+      // await fetchPoleData(token_vote_acc_add);
+    } catch (error) {
+      console.error("Error Voting:", error);
+    } finally {
+      setIsVoting(false);
+    }
+  };
 
   return (
-    <button
-      className="btn btn-xs lg:btn-md btn-primary"
-      onClick={() => vote_for_token.mutateAsync({token_name: 'Moshe', token_mint:new_mint })}
-      disabled={vote_for_token.isPending}
-    >
-      Create {vote_for_token.isPending && '...'}
-    </button>
-  )
-}
+    <div className="flex justify-center mt-4">
+      <button
+        onClick={handleVote}
+        disabled={isVoting}
+        className={`px-6 py-2 font-semibold rounded-lg transition duration-200 ease-in-out 
+          ${isVoting ? "bg-gray-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-700 text-white"}`}
+      >
+        {isVoting ? "Voting..." : `Vote for ${token_name}`}
+      </button>
+    </div>
+  );
+});
+
+
 
 export function SplytoVotingDappList() {
   const { accounts, getProgramAccount } = useSplytoVotingDappProgram()
@@ -63,6 +125,7 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
   })
 
   const count = useMemo(() => accountQuery.data?.count ?? 0, [accountQuery.data?.count])
+  const name = useMemo(() => accountQuery.data?.tokenName ?? '', [accountQuery.data?.tokenName])
 
   return accountQuery.isLoading ? (
     <span className="loading loading-spinner loading-lg"></span>
@@ -72,6 +135,9 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
         <div className="space-y-6">
           <h2 className="card-title justify-center text-3xl cursor-pointer" onClick={() => accountQuery.refetch()}>
             {count}
+          </h2>
+          <h2 className="card-title justify-center text-3xl cursor-pointer" onClick={() => accountQuery.refetch()}>
+            {name}
           </h2>
           <div className="card-actions justify-around">
             {/* <button
@@ -92,35 +158,20 @@ function SplytoVotingDappCard({ account }: { account: PublicKey }) {
               }}
               // disabled={setMutation.isPending}
             >
-              Set
+              Vote
             </button>
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              // onClick={() => decrementMutation.mutateAsync()}
-              // disabled={decrementMutation.isPending}
-            >
-              Decrement
-            </button>
+            
           </div>
           <div className="text-center space-y-4">
             <p>
               <ExplorerLink path={`account/${account}`} label={ellipsify(account.toString())} />
             </p>
-            <button
-              className="btn btn-xs btn-secondary btn-outline"
-              onClick={() => {
-                if (!window.confirm('Are you sure you want to close this account?')) {
-                  return
-                }
-                // return closeMutation.mutateAsync()
-              }}
-              // disabled={closeMutation.isPending}
-            >
-              Close
-            </button>
           </div>
         </div>
       </div>
     </div>
   )
 }
+
+
+
